@@ -1,5 +1,7 @@
 package edu.ithaca.dturnbull.bank;
 
+import java.util.List;
+
 public class BankAccount {
 
     private String email;
@@ -39,12 +41,31 @@ public class BankAccount {
     }
 
 
+    private static boolean checkPart(String part, List<Character> allowedPunctuation) {
+        if (allowedPunctuation.contains(part.charAt(0)) || allowedPunctuation.contains(part.charAt(part.length()-1))) return false;
+        for (int i = 0; i < part.length(); i++) {
+            if (!Character.isLetterOrDigit(part.charAt(i)) && !allowedPunctuation.contains(part.charAt(i))) return false;
+            if (allowedPunctuation.contains(part.charAt(i)) && allowedPunctuation.contains(part.charAt(i-1))) return false;
+        }
+        return true;
+    }
+
+
     public static boolean isEmailValid(String email){
-        if (email.indexOf('@') == -1){
-            return false;
-        }
-        else {
-            return true;
-        }
+        String[] parts = email.split("@");
+        if (parts.length != 2 || parts[0].length() == 0 || parts[1].length() == 0) return false;
+        List<Character> allowedPunctuation = List.of('-', '.', '_');
+        if (!checkPart(parts[0], allowedPunctuation)) return false;
+
+        String[] domainParts = parts[1].split("\\.");
+        if (domainParts.length != 2 || domainParts[0].length() == 0 || domainParts[1].length() == 0) return false;
+
+        List<Character> allowedPunctuationDomain = List.of('-');
+        if (!checkPart(domainParts[0], allowedPunctuationDomain)) return false;
+
+        if (domainParts[1].length() < 2) return false;
+
+        if (!checkPart(domainParts[1], allowedPunctuationDomain)) return false;
+        return true;
     }
 }

@@ -28,7 +28,7 @@ class BankAccountTest {
         assertTrue(BankAccount.isEmailValid("k.free.man@ithaca.edu"));  // can use more than one period just not consecutively 
 
 
-        assertFalse( BankAccount.isEmailValid(""));                         // empty string
+        assertFalse(BankAccount.isEmailValid(""));                         // empty string
         assertFalse(BankAccount.isEmailValid("k..freeman@ithaca.edu"));    // consecutive periods 
         assertFalse(BankAccount.isEmailValid("kfreeman@i"));             // less than 2 char domain 
         assertFalse(BankAccount.isEmailValid("-kfreeman@ithaca.edu"));  // special char cannot be at beginning of name
