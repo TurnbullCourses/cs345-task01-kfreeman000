@@ -43,6 +43,23 @@ public class BankAccount {
         }
     }
 
+    /**
+     * @post increases the balance by amount if amount is non-negative
+     */
+    public void deposit (double amount) throws InsufficientFundsException{
+        if (amount < 0) throw new IllegalArgumentException("Cannot deposit a negative amount");
+        //if (!isAmountValid(amount)) throw new IllegalArgumentException("Amount: " + amount + " is invalid"); // for when isAmountValid is implemented
+        balance += amount;
+    }
+
+    /**
+     * @post increases the balance of the other account and decreases the balance of this account by the amount if it is non-negative and less than the balance of this account
+     */
+    public void transfer (BankAccount other, int amount) throws InsufficientFundsException{
+        withdraw(amount);
+        other.deposit(amount);
+    }
+
 
     private static boolean checkPart(String part, List<Character> allowedPunctuation) {
         if (allowedPunctuation.contains(part.charAt(0)) || allowedPunctuation.contains(part.charAt(part.length()-1))) return false;
