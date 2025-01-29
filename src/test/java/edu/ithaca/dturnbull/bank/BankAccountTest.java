@@ -9,17 +9,26 @@ class BankAccountTest {
     @Test
     void getBalanceTest() {
         BankAccount bankAccount = new BankAccount("a@b.com", 200);
-
+        // 'middle' case
         assertEquals(200, bankAccount.getBalance(), 0.001);
+        
+        // 'edge' case 
+        BankAccount bankAccount1 = new BankAccount("a@b.com", -50);
+        assertThrows(IllegalArgumentException.class, () -> bankAccount1.getBalance());
+
     }
 
     @Test
     void withdrawTest() throws InsufficientFundsException{
         BankAccount bankAccount = new BankAccount("a@b.com", 200);
+        // 'middle' case
         bankAccount.withdraw(100);
-
         assertEquals(100, bankAccount.getBalance(), 0.001);
+
+        // 'edge' case 
         assertThrows(InsufficientFundsException.class, () -> bankAccount.withdraw(300));
+        bankAccount.withdraw(0);
+        assertEquals(100, bankAccount.getBalance());
     }
 
     @Test
