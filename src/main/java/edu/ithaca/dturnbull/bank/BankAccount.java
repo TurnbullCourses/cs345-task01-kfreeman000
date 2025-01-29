@@ -11,6 +11,7 @@ public class BankAccount {
      * @throws IllegalArgumentException if email is invalid
      */
     public BankAccount(String email, double startingBalance){
+        //if (!isAmountValid(startingBalance)) throw new IllegalArgumentException("Amount: " + startingBalance + " is invalid"); // for when isAmountValid is implemented
         if (isEmailValid(email)){
             this.email = email;
             this.balance = startingBalance;
@@ -33,12 +34,31 @@ public class BankAccount {
      * @throws illegalargument exception if withdrawl amount is larger than balance OR if balance is negative 
      */
     public void withdraw (double amount) throws InsufficientFundsException{
+        if (amount < 0) throw new IllegalArgumentException("Cannot withdraw a negative amount");
+        //if (!isAmountValid(amount)) throw new IllegalArgumentException("Amount: " + amount + " is invalid"); // for when isAmountValid is implemented
         if (amount <= balance){
             balance -= amount;
         }
         else {
             throw new InsufficientFundsException("Not enough money");
         }
+    }
+
+    /**
+     * @post increases the balance by amount if amount is non-negative
+     */
+    public void deposit (double amount) throws InsufficientFundsException{
+        if (amount < 0) throw new IllegalArgumentException("Cannot deposit a negative amount");
+        //if (!isAmountValid(amount)) throw new IllegalArgumentException("Amount: " + amount + " is invalid"); // for when isAmountValid is implemented
+        balance += amount;
+    }
+
+    /**
+     * @post increases the balance of the other account and decreases the balance of this account by the amount if it is non-negative and less than the balance of this account
+     */
+    public void transfer (BankAccount other, int amount) throws InsufficientFundsException{
+        withdraw(amount);
+        other.deposit(amount);
     }
 
 
