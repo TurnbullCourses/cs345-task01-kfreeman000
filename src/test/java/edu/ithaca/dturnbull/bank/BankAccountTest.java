@@ -13,8 +13,9 @@ class BankAccountTest {
         assertEquals(200, bankAccount.getBalance(), 0.001);
         
         // 'edge' case 
-        BankAccount bankAccount1 = new BankAccount("a@b.com", -50);
-        assertThrows(IllegalArgumentException.class, () -> bankAccount1.getBalance());
+        bankAccount.withdraw(200);
+        assertEquals(0, bankAccount.getBalance());
+        
 
     }
 
@@ -26,10 +27,10 @@ class BankAccountTest {
         assertEquals(100, bankAccount.getBalance(), 0.001);
 
         // 'edge' case 
-        assertThrows(InsufficientFundsException.class, () -> bankAccount.withdraw(300));
+        assertThrows(IllegalArgumentException.class, () -> bankAccount.withdraw(300));
         bankAccount.withdraw(0);
         assertEquals(100, bankAccount.getBalance());
-        assertThrows(InsufficientFundsException.class, () -> bankAccount.withdraw(-50));
+        assertThrows(IllegalArgumentException.class, () -> bankAccount.withdraw(-50));
     }
 
     @Test
@@ -60,6 +61,22 @@ class BankAccountTest {
         
     }
 
+    @Test 
+    void isAmountValid() {
+         // Valid cases
+         assertTrue(BankAccount.isAmountValid(0));      // Zero is valid
+         assertTrue(BankAccount.isAmountValid(50.25));  // Standard valid amount
+         assertTrue(BankAccount.isAmountValid(100));    // Whole number
+         assertTrue(BankAccount.isAmountValid(0.99));   // Two decimal places
+ 
+         // Invalid cases
+         assertFalse(BankAccount.isAmountValid(-10));    // Negative amount
+         assertFalse(BankAccount.isAmountValid(-0.01));  // Slightly negative
+         assertFalse(BankAccount.isAmountValid(5.999));  // More than two decimal places
+         assertFalse(BankAccount.isAmountValid(123.456));// More than two decimal places
+     }
+
+
     @Test
     void constructorTest() {
         BankAccount bankAccount = new BankAccount("a@b.com", 200);
@@ -68,6 +85,26 @@ class BankAccountTest {
         assertEquals(200, bankAccount.getBalance(), 0.001);
         //check for exception thrown correctly
         assertThrows(IllegalArgumentException.class, ()-> new BankAccount("", 100));
+    }
+
+    @Test
+    void depositTest() {
+        BankAccount bankAccount = new BankAccount("a@b.com", 200);
+        bankAccount.deposit(25.00);
+        assertEquals(225.00,bankAccount.getBalance());
+        assertThrows(IllegalArgumentException.class, ()-> bankAccount.deposit(-5.00));
+
+    }
+
+    @Test
+    void transferTest() {
+        BankAccount bankAccount = new BankAccount("a@b.com", 200);
+        BankAccount bankAccount1 = new BankAccount("a@b.com", 200);
+        BankAccount bankAccount2 = new BankAccount("kfreeman@ithaca.com", 200);
+        assertThrows(IllegalArgumentException.class, ()-> bankAccount.transfer(bankAccount1, 10));
+        assertThrows(IllegalArgumentException.class, ()-> bankAccount.transfer(bankAccount2, 300));
+
+        
     }
 
 }
